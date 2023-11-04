@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <link rel="stylesheet" type="text/css" href="../static/new.css" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Ceviche+One&family=Inter:wght@900&family=Jua&family=Koulen&display=swap"
+        rel="stylesheet"
+      />
+      <title>Project</title>
+    </head>
+
+    <body>
+      <div class="title">New!</div>
+      <div class="container">
+        <div class="new-post_container">
+          <form id="new-post-form">
+            <input
+              type="text"
+              placeholder="제목을 입력하세요!"
+              name="title"
+              required
+            />
+            <textarea
+              placeholder="내용을 입력하세요!"
+              name="content"
+              required
+            ></textarea>
+            <input
+              type="text"
+              placeholder="사진 주소를 입력하세요!"
+              name="img_src"
+              required
+            />
+            <input id="new-post_btn" type="submit" value="작성하기" />
+          </form>
+        </div>
+      </div>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const form = document.getElementById("new-post-form");
+          form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const title = form.querySelector('input[name="title"]').value;
+            const content = form.querySelector(
+              'textarea[name="content"]'
+            ).value;
+            const img_src = form.querySelector('input[name="img_src"]').value;
+
+            fetch(
+              "https://port-0-swvolunteer-12fhqa2llo9rna9b.sel5.cloudtype.app/posts",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ title, content, img_src }),
+              }
+            )
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error(
+                    `Network response was not ok ${response.statusText}`
+                  );
+                }
+                return response.json();
+              })
+              .then((data) => {
+                console.log("Success:", data);
+                alert("게시글이 성공적으로 작성되었습니다!");
+                window.location.href = "./home.html"; // or wherever you want to redirect
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("게시글 작성 중 오류가 발생했습니다.");
+              });
+          });
+        });
+      </script>
+    </body>
+  </html>
+</html>
